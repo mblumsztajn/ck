@@ -109,3 +109,17 @@ class no_such_file_exception :public exception{
 public:
 
 };
+
+
+inline uint16 bswap(const uint16 &x)
+{
+ uint16 x_ = __builtin_bswap32(x << 16);
+ return x_;
+
+}
+inline uint32 bswap(const uint32 &x)
+{
+ uint32 x_ = __builtin_bswap32(x);
+ return x_;
+
+}

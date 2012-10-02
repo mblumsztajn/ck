@@ -38,22 +38,25 @@ void mobi::parse_header()
     file->read((char *) &header, HEADERS_LEN);
 
 
+    ofstream output_file("num_records", ios::binary);
+    output_file.write((char*)&header.num_records,sizeof(header.num_records));
+    //cout . write (header.type,78);
+    //
     cout << "name               " << header.name                <<endl;
     cout << "flags              " << header.flags               <<endl;
-    cout << "version            " << header.version             <<endl;
-    cout << "c_time             " << header.c_time              <<endl;
-    cout << "m_time             " << header.m_time              <<endl;
-    cout << "b_time             " << header.b_time              <<endl;
-    cout << "mod_num            " << header.mod_num             <<endl;
-    cout << "app_info           " << header.app_info            <<endl;
-    cout << "sort_info          " << header.sort_info           <<endl;
-    cout << "type               " << header.type                <<endl;
-    cout . write (header . type, 4)<< endl;;
+    cout << "version            " << bswap(header.version)             <<endl;
+    cout << "c_time             " << bswap(header.c_time)              <<endl;
+    cout << "m_time             " << bswap(header.m_time)              <<endl;
+    cout << "b_time             " << bswap(header.b_time)              <<endl;
+    cout << "mod_num            " << bswap(header.mod_num)             <<endl;
+    cout << "app_info           " << bswap(header.app_info)            <<endl;
+    cout << "sort_info          " << bswap(header.sort_info)           <<endl;
+    cout << "type               "; cout.write(header.type,4)                <<endl;
 
     cout << "creator            " << header.creator             <<endl;
-    cout << "u_id_seed          " << header.u_id_seed           <<endl;
-    cout << "next_record_list   " << header.next_record_list    <<endl;
-    cout << "num_records        " << header.num_records         <<endl;
+    cout << "u_id_seed          " << bswap(header.u_id_seed)           <<endl;
+    cout << "next_record_list   " << hex << bswap(header.next_record_list)    <<endl;
+    cout << "num_records        " << bswap(header.num_records)    <<endl;
 
 
 }
