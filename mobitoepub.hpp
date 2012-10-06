@@ -1,22 +1,9 @@
-// =====================================================================================
-// 
-//       Filename:  mobitoepub.h
-// 
-//    Description:  
-// 
-//        Version:  1.0
-//        Created:  10/01/2012 03:28:46 PM
-//       Revision:  none
-//       Compiler:  g++
-// 
-//         Author:  DaZ ()
-//        Company:  
-// 
-// =====================================================================================
+#pragma once
 #define HEADERS_LEN 78
 #include <fstream>
 #include <iostream>
 #include <cstring>
+#include "mobiexceptions.hpp"
 //#include <stdint.h>
 //#include <cstdio>
 //#include <string>
@@ -105,10 +92,7 @@ protected:
         ifstream *file;
 };
 
-class no_such_file_exception :public exception{
-public:
-
-};
+//class no_such_file_exception :public exception{};
 
 
 inline uint16 bswap(const uint16 &x)

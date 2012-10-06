@@ -17,7 +17,6 @@
 
 
 
-
 int main(int argc, char **argv)
 {
     if(op(argc, argv))
@@ -29,8 +28,20 @@ int main(int argc, char **argv)
 
 mobi::mobi(char *file_name) : rec_header(NULL), file_name(NULL), file(0)
 {
+    try{
     load_file(file_name);
-    parse_header();
+    }
+    catch(no_such_file_exception){
+        cout << "No such file\n";
+        return;
+    }
+    try{
+        parse_header();
+    }
+    catch(invalid_file_exception){
+        cout << "Invalid header\n";
+        return;
+    }
 }
 
 void mobi::parse_header()
@@ -40,6 +51,8 @@ void mobi::parse_header()
 
     ofstream output_file("num_records", ios::binary);
     output_file.write((char*)&header.num_records,sizeof(header.num_records));
+  if(strcmp("BOOKMOBI",header.type)!=0)
+      throw invalid_file_exception();
     //cout . write (header.type,78);
     //
 
@@ -60,6 +73,7 @@ void mobi::parse_header()
   cout << "num_records      " << bswap(header.num_records)             <<endl;
 
 
+
 }
 
 
@@ -67,14 +81,13 @@ void mobi::parse_header()
 
 void mobi::load_file(char *file_name)
 {
-    try {
+    //try {
     file = new ifstream(file_name);
     if(!file->good())
         throw no_such_file_exception();
-    }
-    catch(no_such_file_exception){
-        cout << "No such file\n";
-    }
-
+    //}
+    //catch(no_such_file_exception){
+        //cout << "No such file\n";
+    //}
 
 }
