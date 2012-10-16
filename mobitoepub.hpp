@@ -1,59 +1,23 @@
 #pragma once
-#define HEADERS_LEN 78
 #include <fstream>
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "mobiexceptions.hpp"
-//#include <stdint.h>
-//#include <cstdio>
-//#include <string>
+#include "mobiheaders.hpp"
+
+#define DEBUG true
+#define PALMDOC_DB_HEADER_LEN 78
+#define PALMDOC_HEADER_LEN 16
+#define MOBI_HEADER_LEN 232
 using namespace std;
 
 
-
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-
-#pragma pack(push)
-#pragma pack(1)
-
-struct headers
+struct st_file_section
 {
-    char name[32];
-    uint16 flags;
-    uint16 version;
-    uint32 c_time;
-    uint32 m_time;
-    uint32 b_time;
-    uint32 mod_num;
-    uint32 app_info;
-    uint32 sort_info;
-    char type[4];
-    char creator[4];
-    uint32 u_id_seed;
-    uint32 next_record_list;
-    uint16 num_records;
+    uint32 start;
+    uint32 end;
 };
-
-struct rec_headers{
-    uint32   offset;
-    uint8    deleted   : 1;
-    uint8    dirty     : 1;
-    uint8    busy      : 1;
-    uint8    secret    : 1;
-    uint8    category  : 4;
-    char     uniqueID[3];
-};
-
-struct image_data {
-    char *      data;
-    size_t      len;
-    char *	type;
-};
-#pragma pack(pop)
-static_assert((sizeof(headers)==HEADERS_LEN),"lolnie");
-
 
 bool  op(int &argc, char **argv)
 {
@@ -75,14 +39,18 @@ bool  op(int &argc, char **argv)
 }
 
 
+//
 class mobi{
-    headers header;
-    rec_headers *rec_header;
+    palmdoc_db_header header;
+    palmdoc_header    pd_header;
+    mobi_header       mobi_header_;
+    vector<uint32>    header_offsets;
+
 
     void parse_header();
     bool load_file();
+    st_file_section get_section(int sec);
 public:
-    void print_header();
     unsigned int get_locale();
     void load_file(char *file_name);
     mobi(char *file_name);
@@ -92,18 +60,16 @@ protected:
         ifstream *file;
 };
 
-//class no_such_file_exception :public exception{};
 
 
-inline uint16 bswap(const uint16 &x)
+bool strcmp_is_a_worthless_pos(char x[], char y[], int len)
 {
- uint16 x_ = __builtin_bswap32(x << 16);
- return x_;
+    for(int i=0;i<len;i++)
+    {
+        if(x[i] != y[i])
+        return false;
+    }
+    return true;
 
-}
-inline uint32 bswap(const uint32 &x)
-{
- uint32 x_ = __builtin_bswap32(x);
- return x_;
 
 }
