@@ -2,6 +2,10 @@
 #define PALMDOC_DB_HEADER_LEN 78
 #define PALMDOC_HEADER_LEN 16
 #define MOBI_HEADER_LEN 232
+#define COMPRESSION_NONE 1
+#define COMPRESSION_PALM 2
+#define COMPRESSION_HUFFDIC 17480
+#define MOBI_TYPE "BOOKMOBI"
 
 
 typedef uint8_t uint8;
@@ -98,6 +102,7 @@ struct mobi_header
   uint32 extra_record_data_flags;      //tldr http://wiki.mobileread.com/wiki/MOBI#MOBI_Header
   uint32 indx_record_offset;           //(If not 0xFFFFFFFF)The record number of
                                        //the first INDX record created from an ncx file.
+                                       //24B till exth
 };
 struct rec_headers{
     uint32   offset;
@@ -199,6 +204,7 @@ void unretardify_header(mobi_header &x)
 void print_header(const mobi_header &x)
 {
 
+    cout<< "mobi_header                 "   << "\n\n";
     cout<< "id:                         "   << x.id << endl;
     cout<< "header_len:                 "   << x.header_len << endl;
     cout<< "mobi_type:                  "   << x.mobi_type << endl;
@@ -252,6 +258,7 @@ void print_header(const mobi_header &x)
 void print_header(const palmdoc_db_header &x)
 {
 
+    cout <<"palmdoc_db_header           " << "\n\n";
     cout << "name[32]:                  " <<   x.name;
     cout << "flags:                     " <<   x.flags;
     cout << "version:                   " <<   x.version;
@@ -269,7 +276,7 @@ void print_header(const palmdoc_db_header &x)
 }
 void print_header(const palmdoc_header &x)
 {
-    cout << "palmdoc_header             " << "\n\n";
+    cout << "palmdoc_header              " << "\n\n";
 
     cout << "compression:                "  << x.compression << endl;
     cout << "garbage:                    "  << x.garbage << endl;
